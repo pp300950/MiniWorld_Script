@@ -25,7 +25,7 @@ This project enables players to write and execute programs within MiniWorld, pro
 It is Open Source, meaning anyone can contribute or modify the project for their needs.
 
 
-For any issues or questions, feel free to open an Issue on GitHub or contact via email.
+For any issues or questions, feel free to open an Issue on GitHub or contact via email : toaiseriesandcat@gmail.com
 
 Contributing
 
