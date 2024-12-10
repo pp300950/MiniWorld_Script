@@ -11,6 +11,9 @@ if value then
 
     -- ตารางสำหรับเก็บตัวแปรที่ประกาศ
     local variables = {}
+    
+    -- ตารางสำหรับเก็บฟังก์ชันที่ประกาศ
+    local functions = {}
 
     -- ฟังก์ชันประมวลผลคำสั่งทีละบรรทัด
     for _, command in ipairs(commands) do
@@ -63,6 +66,58 @@ if value then
                 Chat:sendSystemMsg("i = " .. tostring(i), 0)
                 i = i + 1
             end
+
+        -- ตรวจสอบคำสั่ง sort
+        elseif string.match(command, "^sort%s*%((.+)%)$") then
+            local _, _, arrName = string.find(command, "^sort%s*%((.+)%)$")
+            if variables[arrName] and type(variables[arrName]) == "table" then
+                table.sort(variables[arrName])
+                Chat:sendSystemMsg("Array sorted: " .. table.concat(variables[arrName], ", "), 0)
+            else
+                Chat:sendSystemMsg("Invalid array name: " .. arrName, 0)
+            end
+
+        -- ตรวจสอบคำสั่ง insert
+        elseif string.match(command, "^insert%s*%((.+),%s*(.+)%)$") then
+            local _, _, arrName, valueToInsert = string.find(command, "^insert%s*%((.+),%s*(.+)%)$")
+            valueToInsert = tonumber(valueToInsert) or valueToInsert
+            if variables[arrName] and type(variables[arrName]) == "table" then
+                table.insert(variables[arrName], valueToInsert)
+                Chat:sendSystemMsg("Value inserted into array: " .. tostring(valueToInsert), 0)
+            else
+                Chat:sendSystemMsg("Invalid array name: " .. arrName, 0)
+            end
+
+        -- ตรวจสอบคำสั่ง remove
+        elseif string.match(command, "^remove%s*%((.+),%s*(%d+)%)$") then
+            local _, _, arrName, indexToRemove = string.find(command, "^remove%s*%((.+),%s*(%d+)%)$")
+            indexToRemove = tonumber(indexToRemove)
+            if variables[arrName] and type(variables[arrName]) == "table" then
+                table.remove(variables[arrName], indexToRemove)
+                Chat:sendSystemMsg("Value removed from array at index " .. indexToRemove, 0)
+            else
+                Chat:sendSystemMsg("Invalid array name: " .. arrName, 0)
+            end
+
+        -- ตรวจสอบคำสั่ง function declaration
+        elseif string.match(command, "^function%s+[%w_]+%s*%(.*%)%s*{") then
+            local funcName, params = string.match(command, "^function%s+([%w_]+)%s*%(.*%)%s*{")
+            functions[funcName] = {params = params, body = command}
+            Chat:sendSystemMsg("Function " .. funcName .. " declared.", 0)
+
+        -- ตรวจสอบคำสั่ง function call
+        elseif string.match(command, "^([%w_]+)%s*%(.*%)$") then
+            local funcName, args = string.match(command, "^([%w_]+)%s*%(.*%)$")
+            if functions[funcName] then
+                -- เรียกใช้ฟังก์ชันจากตาราง
+                local func = functions[funcName]
+                -- ประมวลผล arguments และ execute ฟังก์ชัน
+                Chat:sendSystemMsg("Calling function " .. funcName .. " with args: " .. args, 0)
+                -- รันบล็อกฟังก์ชันที่เกี่ยวข้อง
+            else
+                Chat:sendSystemMsg("Function not declared: " .. funcName, 0)
+            end
+
         else
             Chat:sendSystemMsg("Invalid command: " .. command, 0)
         end
