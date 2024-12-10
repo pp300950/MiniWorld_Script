@@ -30,9 +30,3 @@ For any issues or questions, feel free to open an Issue on GitHub or contact via
 Contributing
 
 Contributions are welcome! Feel free to fork the repository, make improvements, and submit pull requests.
-
-
----
-
-This README is designed for use in the GitHub repository to guide developers on setting up and contributing to the project.
-
