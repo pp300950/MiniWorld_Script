@@ -1,4 +1,10 @@
-local value = 'var age num = 0@|&age = 1 + 1@|&print("อายุคือ"+age+"ครับ"+"age"+age)'
+local value = [[
+    var age num = 18@|&
+    if age > 20@|&
+    print("อายุมากกว่า 20")@|&
+    else@|&
+    print("อายุไม่ถึง 20")
+]]
 
 if value ~= nil and value ~= "" then
     -- ตารางสำหรับเก็บตัวแปร
@@ -15,7 +21,7 @@ if value ~= nil and value ~= "" then
         -- ตรวจสอบคำสั่ง var
         if string.match(command, "^%s*var%s+([%w_]+)%s+(%a+)%s*=%s*(.+)%s*$") then
             local varName, varType, varValue = string.match(command, "^%s*var%s+([%w_]+)%s+(%a+)%s*=%s*(.+)%s*$")
-            
+
             -- รองรับตัวแปรประเภท `num`
             if varType == "num" then
                 local numericValue = tonumber(varValue)
@@ -33,7 +39,7 @@ if value ~= nil and value ~= "" then
                 print("ประเภทตัวแปรไม่รองรับ: " .. varType)
             end
 
-        -- ตรวจสอบคำสั่งกำหนดค่าให้ตัวแปร
+            -- ตรวจสอบคำสั่งกำหนดค่าให้ตัวแปร
         elseif string.match(command, "^%s*([%w_]+)%s*=%s*(.+)%s*$") then
             local varName, expression = string.match(command, "^%s*([%w_]+)%s*=%s*(.+)%s*$")
 
@@ -98,14 +104,14 @@ if value ~= nil and value ~= "" then
                 print("อัปเดตตัวแปร: " .. varName .. " = " .. value)
             end
 
-        -- ตรวจสอบคำสั่ง print
+            -- ตรวจสอบคำสั่ง print
         elseif string.match(command, "^%s*print%s*%((.-)%)%s*$") then
             local expression = string.match(command, "^%s*print%s*%((.-)%)%s*$")
 
             -- แยกนิพจน์และคำนวณค่าตัวแปรที่ใช้
             local result = ""
             for part in string.gmatch(expression, '([^%+]+)') do
-                part = part:match("^%s*(.-)%s*$") -- ตัดช่องว่างออก
+                part = part:match("^%s*(.-)%s*$")      -- ตัดช่องว่างออก
                 if string.match(part, '^".*"$') then
                     result = result .. part:sub(2, -2) -- ถ้าเป็นสตริงก็นำมาใส่
                 else
@@ -119,6 +125,39 @@ if value ~= nil and value ~= "" then
                 end
             end
             print("คำสั่ง print: " .. result)
+            -- ตรวจสอบคำสั่ง if
+        elseif string.match(command, "^%s*if%s+(.+)%s*$") then
+            local condition = string.match(command, "^%s*if%s+(.+)%s*$")
+
+            -- ตรวจสอบเงื่อนไข
+            local function evaluateCondition(cond)
+                -- แทนค่าตัวแปรในเงื่อนไข
+                for varName, varValue in pairs(variables) do
+                    cond = string.gsub(cond, "%f[%w_]" .. varName .. "%f[%W_]", tostring(varValue))
+                end
+
+                -- ประมวลผลเงื่อนไขด้วย load()
+                local status, result = pcall(function()
+                    return load("return " .. cond)()
+                end)
+                if status then
+                    return result
+                else
+                    print("ข้อผิดพลาด: เงื่อนไขไม่ถูกต้อง - " .. cond)
+                    return false
+                end
+            end
+
+            -- ตรวจสอบว่าเงื่อนไขเป็นจริงหรือไม่
+            if evaluateCondition(condition) then
+                print("เงื่อนไขเป็นจริง: " .. condition)
+            else
+                print("เงื่อนไขเป็นเท็จ: " .. condition)
+            end
+
+            -- ตรวจสอบคำสั่ง else
+        elseif string.match(command, "^%s*else%s*$") then
+            print("เข้าสู่คำสั่ง else")
         else
             print("คำสั่งไม่ถูกต้อง: " .. command)
         end
