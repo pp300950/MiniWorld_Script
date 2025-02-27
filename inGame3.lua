@@ -1,15 +1,17 @@
 local value = [[
-    var age num = 88@|&
-    if age > 20 then@|&
-    print("Over 19 years old")@|&
-    else@|&
-    print("Under 20 years old")
+    var i num = 1@|&
+    for i = 1, 5 do@|&
+        print("Count: " + i)@|&
+    end
 ]]
+
 -- ตารางสำหรับเก็บตัวแปรที่ประกาศ
 local variables = {}
 local index = 0
+local IfElse = false
 
 local function evaluateCondition(condition)
+    
     -- แทนค่าตัวแปรในเงื่อนไข
     --print("Work !!!")
     for varName, varValue in pairs(variables) do
@@ -74,7 +76,8 @@ local function evaluateCondition(condition)
 end
 
 local function processCommand(command)
-    print("#G Function is Use")
+    print("#### Function is Use")
+    IfElse = true
 
     if string.match(command, "^%s*var%s+([%w_]+)%s+(%a+)%s*=%s*(.+)%s*$") then
         local varName, varType, varValue = string.match(command, "^%s*var%s+([%w_]+)%s+(%a+)%s*=%s*(.+)%s*$")
@@ -187,7 +190,7 @@ end
 
 local insideConditionBlock = false -- เพิ่มตัวแปรควบคุม
 local Test = 0
-local IfElse = false
+
 if value then
     -- สร้างอาเรย์เพื่อเก็บคำสั่งที่แยกออกมา
     local commands = {}
@@ -286,9 +289,6 @@ if value then
                 print("Update Variable: " .. varName .. " = " .. value)
             end
 
-            -- ตรวจสอบคำสั่ง print
-
-
             -- ตรวจสอบคำสั่ง for loop
         elseif string.match(command, "^%s*for%s+(%w+)%s*=%s*(%d+),%s*(%d+)%s*do%s*$") then
             local varName, startVal, endVal = string.match(command, "^%s*for%s+(%w+)%s*=%s*(%d+),%s*(%d+)%s*do%s*$")
@@ -327,32 +327,27 @@ if value then
                 i = i + 1
             end
 
-            -- รันลูป
-            while evaluateExpression(condition) do
-                for index, loopCmd in ipairs(loopCommands) do
-                    processCommand(loopCmd)
-                end
-            end
+        -- ตรวจสอบเงื่อนไข 
         elseif string.match(command, "^%s*if%s+(.+)%s+then%s*$") then
             print("///// if-else work //////") -- Debug
             IfElse = true
             local condition = string.match(command, "^%s*if%s+(.+)%s+then%s*$")
             local evalCondition = evaluateCondition(condition)
             local executeBlock = evalCondition
-            local insideIfBlock = evalCondition  -- ใช้ตรวจสอบว่าเงื่อนไข if-elseif ผ่านแล้วหรือยัง
-        
+            local insideIfBlock = evalCondition                    -- ใช้ตรวจสอบว่าเงื่อนไข if-elseif ผ่านแล้วหรือยัง
+
             print("If condition:", condition, "=>", evalCondition) -- Debug
-        
+
             -- ใช้ลูปเพื่อเช็คเงื่อนไขต่อไปเรื่อยๆ
             local nextIndex = index + 1
             while nextIndex <= #commands do
                 local nextCommand = commands[nextIndex]
-        
+
                 -- ตรวจสอบ elseif
                 if string.match(nextCommand, "^%s*elseif%s+(.+)%s+then%s*$") then
                     print("####  Else If ####")
                     local elseifCondition = string.match(nextCommand, "^%s*elseif%s+(.+)%s+then%s*$")
-                    
+
                     if insideIfBlock then
                         executeBlock = false -- ถ้า if ก่อนหน้าผ่านแล้ว ข้าม elseif
                     else
@@ -362,8 +357,8 @@ if value then
                             insideIfBlock = true
                         end
                     end
-        
-                -- ตรวจสอบ else
+
+                    -- ตรวจสอบ else
                 elseif string.match(nextCommand, "^%s*else%s*$") then
                     print("####  Else ####")
                     if not insideIfBlock then
@@ -372,21 +367,22 @@ if value then
                     else
                         executeBlock = false -- ป้องกัน else ทำงานซ้ำ
                     end
-        
-                -- ตรวจสอบว่าเป็น end (จบเงื่อนไข if-elseif-else)
+
+                    -- ตรวจสอบว่าเป็น end (จบเงื่อนไข if-elseif-else)
                 elseif string.match(nextCommand, "^%s*end%s*$") then
                     print("##### End of if-elseif-else #####")
                     break -- ออกจากลูปทันที
-        
-                -- ประมวลผลคำสั่งภายใน if-elseif-else
+
+                    -- ประมวลผลคำสั่งภายใน if-elseif-else
                 elseif executeBlock then
                     print("Executing:", nextCommand) -- Debug
                     processCommand(nextCommand)
                 end
-        
+
                 nextIndex = nextIndex + 1 -- ไปยังคำสั่งถัดไป
             end
-        
+
+        -- ตรวจสอบคำสั่ง print
         elseif string.match(command, "^%s*print%s*%((.-)%)%s*$") and (IfElse == false) then
             print("Use Print")
             if not insideConditionBlock then -- ปริ้นต์ได้เฉพาะเมื่อไม่ได้อยู่ในเงื่อนไข if
