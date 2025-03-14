@@ -82,19 +82,19 @@ local function processCommand(command)
             if numericValue then
                 variables[varName] = numericValue
               --print("Declare variables: " .. varName .. " = " .. numericValue)
-              Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. numericValue)
+             -- Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. numericValue)
             else
                 --print("Error: The value of the variable " .. varName .. " is not a valid number")
-                Chat:sendSystemMsg("ข้อผิดพลาด: ค่าของตัวแปร " .. varName .. " ไม่ใช่ตัวเลขที่ถูกต้อง")
+                Chat:sendSystemMsg("#Rข้อผิดพลาด: ค่าของตัวแปร " .. varName .. " ไม่ใช่ตัวเลขที่ถูกต้อง")
             end
         elseif varType == "str" then
             varValue = string.match(varValue, '^"(.-)"$') or varValue -- กำจัดเครื่องหมายคำพูด
             variables[varName] = varValue
             --print("Declare variables: " .. varName .. " = " .. varValue)
-            Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. varValue)
+          --  Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. varValue)
         else
             --print("Variable types are not supported: " .. varType)
-            Chat:sendSystemMsg("ประเภทตัวแปรไม่รองรับ: " .. varType)
+            Chat:sendSystemMsg("#Rประเภทตัวแปรไม่รองรับ: " .. varType)
         end
 
         -- ตรวจสอบคำสั่งกำหนดค่าให้ตัวแปร
@@ -152,7 +152,7 @@ local function processCommand(command)
                 return result
             else
                 --print("Error: Unable to process expression - " .. result)
-                Chat:sendSystemMsg("ข้อผิดพลาด: ไม่สามารถประมวลผลนิพจน์ได้ - " .. result)
+                Chat:sendSystemMsg("#Rข้อผิดพลาด: ไม่สามารถประมวลผลนิพจน์ได้ - " .. result)
                 return nil
             end
         end
@@ -161,7 +161,7 @@ local function processCommand(command)
         if value ~= nil then
             variables[varName] = value
             --print("Update variables: " .. varName .. " = " .. value)
-            Chat:sendSystemMsg("อัปเดตตัวแปร: " .. varName .. " = " .. value)
+           -- Chat:sendSystemMsg("อัปเดตตัวแปร: " .. varName .. " = " .. value)
         end
 
         -- ตรวจสอบคำสั่ง print
@@ -180,12 +180,13 @@ local function processCommand(command)
                 if varValue then
                     result = result .. varValue
                 else
-                    result = result .. "ไม่พบตัวเเปร"
+                    result = result .. "#Rไม่พบตัวเเปร"
                 end
             end
         end
         --print("Sys print: " .. result)
-        Chat:sendSystemMsg("คำสั่ง print: " .. result)
+       
+       Chat:sendSystemMsg("#G" .. result)
     end
 end
 
@@ -214,19 +215,19 @@ if value then
                 if numericValue then
                     variables[varName] = numericValue
                     --print("Declare variables: " .. varName .. " = " .. numericValue)
-                    Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. numericValue)
+                --    Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. numericValue)
                 else
                     --print("Error: The value of the variable " .. varName .. " is not a valid number")
-                    Chat:sendSystemMsg("ข้อผิดพลาด: ค่าของตัวแปร " .. varName .. " ไม่ใช่ตัวเลขที่ถูกต้อง")
+                    Chat:sendSystemMsg("#Rข้อผิดพลาด: ค่าของตัวแปร " .. varName .. " ไม่ใช่ตัวเลขที่ถูกต้อง")
                 end
             elseif varType == "str" then
                 varValue = string.match(varValue, '^"(.-)"$') or varValue -- กำจัดเครื่องหมายคำพูด
                 variables[varName] = varValue
                 --print("Declare variables: " .. varName .. " = " .. varValue)
-                Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. varValue)
+           --     Chat:sendSystemMsg("ประกาศตัวแปร: " .. varName .. " = " .. varValue)
             else
                 --print("Variable types are not supported: " .. varType)
-                Chat:sendSystemMsg("ประเภทตัวแปรไม่รองรับ: " .. varType)
+                Chat:sendSystemMsg("#Rประเภทตัวแปรไม่รองรับ: " .. varType)
             end
 
             -- ตรวจสอบคำสั่งกำหนดค่าให้ตัวแปร
@@ -284,7 +285,7 @@ if value then
                     return result
                 else
                     --print("Error: Unable to process expression - " .. result)
-                    Chat:sendSystemMsg("ข้อผิดพลาด: ไม่สามารถประมวลผลนิพจน์ได้ - " .. result)
+                    Chat:sendSystemMsg("#Rข้อผิดพลาด: ไม่สามารถประมวลผลนิพจน์ได้ - " .. result)
                     return nil
                 end
             end
@@ -293,7 +294,7 @@ if value then
             if value ~= nil then
                 variables[varName] = value
                 --print("Update Variable: " .. varName .. " = " .. value)
-                Chat:sendSystemMsg("อัปเดตตัวแปร: " .. varName .. " = " .. value)
+             --   Chat:sendSystemMsg("อัปเดตตัวแปร: " .. varName .. " = " .. value)
             end
 
             -- ตรวจสอบคำสั่ง for loop
@@ -408,12 +409,12 @@ if value then
                         if varValue then
                             result = result .. varValue
                         else
-                            result = result .. "Not found variables"
+                            result = result .. "ไม่พบตัวเเปร"
                         end
                     end
                 end
                 --print("Sys print: " .. result)
-                Chat:sendSystemMsg("คำสั่ง print: " .. result)
+                Chat:sendSystemMsg("#G" .. result)
             end
         end
     end
