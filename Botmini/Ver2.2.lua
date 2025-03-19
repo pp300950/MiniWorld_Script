@@ -75,11 +75,11 @@ function train_q_learning(epochs)
         
         -- ลด Epsilon ลง
         epsilon = math.max(epsilon_min, epsilon * epsilon_decay)
-        
+
         if i % 5000 == 0 then
             print("Training iteration:", i, "Epsilon:", epsilon)
         end
-        
+
         -- หยุดการฝึกหากตอบถูกเกิน 5 ครั้ง
         if correct_count >= 5 then
             print("เรียนรู้สำเร็จ! ค่าพารามิเตอร์ที่ได้:")
