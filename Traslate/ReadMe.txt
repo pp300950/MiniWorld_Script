@@ -1,0 +1,14 @@
+เเหล่งที่มาข้อมูลคือ 
+https://wiki.miniworldgame.com/doku.php?id=developer_center:developer_editor:script:autotranslationscript
+
+หากต้องการใช้ตัวเเปรชนิดอื่น
+https://wiki.miniworldgame.com/doku.php?id=developer_center:developer_editor:script
+ตรวตสอบได้ในลิงค์
+
+หากสงสัยว่าการอัปเดตตัวเเปรในสคริปต์มันเชื่อมโยงกับของในเกมงั้นหรือ 
+ใช่เเล้ว ลองประกาศสคริปในทริกเกอร์เป็นชนิดสตริงดูเเล้วใช้โค้ดนี้
+VarLib2:setGlobalVarByName(4, "ชื่อตัวเเปร", ตัวเเปรเก็บค่าของข้อมูลที่ต้องการส่งไปอัปเดจ)
+เลข4คือเลขกำหนดชนิดข้อมูลซึ่งในที่นี้ 4 คือการกำหนดว่าข้อมูลที่ต้องการเก็บในตัวเเปรคือข้อมูลสตริง
+
+หากมีข้อสงสัยโปรติดต่อมาที่Gmail : toaiseriesandcat@gmail.com
+หรือ เฟสบุ๊คที่หน้าต่างหลักของกิตฮับ
