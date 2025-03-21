@@ -85,5 +85,5 @@ function greetPlayer(playerid)
     Chat:sendSystemMsg(T_Text(playerid, "GREETING"), playerid)
     Chat:sendSystemMsg(T_Text(playerid, "WELCOME"), playerid)
     Chat:sendSystemMsg(T_Text(playerid, "LOVE_LITTLE_GIRL"), playerid)
-    VarLib2:setGlobalVarByName(4, "Group3", T_Text(playerid, "LOVE_LITTLE_GIRL"))
+    VarLib2:setGlobalVarByName(4, "LOVE", T_Text(playerid, "LOVE_LITTLE_GIRL"))
 end
