@@ -4,6 +4,8 @@ ScriptSupportEvent:registerEvent("Game.AnyPlayer.EnterGame", function(e)
     local playerid = e.eventobjid
     local r, lc, ar = Player:GetLanguageAndRegion(playerid)
     local codeLang = {"en", "cn", "tw", "tha", "jpn"} --เพิ่มภาษาที่ต้องการตรงนี้ 
+    --ถ้าเอาหมดเลยก็
+    --local codeLang = {"en", "cn", "tw", "tha", "jpn", "es", "pt", "fr", "ar", "kr", "vi", "ru", "tr", "it", "de", "id", "my"} 
     
     if r == 0 then
         local inlangcode = tonumber(lc)
