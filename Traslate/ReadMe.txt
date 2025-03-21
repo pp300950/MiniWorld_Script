@@ -2,7 +2,7 @@
 https://wiki.miniworldgame.com/doku.php?id=developer_center:developer_editor:script:autotranslationscript
 
 หากต้องการใช้ตัวเเปรชนิดอื่น
-https://wiki.miniworldgame.com/doku.php?id=developer_center:developer_editor:script
+https://wiki.miniworldgame.com/doku.php?id=developer_center:developer_editor:script:datatype
 ตรวตสอบได้ในลิงค์
 
 หากสงสัยว่าการอัปเดตตัวเเปรในสคริปต์มันเชื่อมโยงกับของในเกมงั้นหรือ 
@@ -10,7 +10,7 @@ https://wiki.miniworldgame.com/doku.php?id=developer_center:developer_editor:scr
 VarLib2:setGlobalVarByName(4, "ชื่อตัวเเปร", ตัวเเปรเก็บค่าของข้อมูลที่ต้องการส่งไปอัปเดจ)
 เลข4คือเลขกำหนดชนิดข้อมูลซึ่งในที่นี้ 4 คือการกำหนดว่าข้อมูลที่ต้องการเก็บในตัวเเปรคือข้อมูลสตริง
 
-หากมีข้อสงสัยโปรติดต่อมาที่Gmail : toaiseriesandcat@gmail.com
+หากมีข้อสงสัยโปรติดต่อมาที่ Gmail:toaiseriesandcat@gmail.com
 หรือ เฟสบุ๊คที่หน้าต่างหลักของกิตฮับ
 
 ส่วนโค้ดไพธ่อนที่ใช้ในการเเปลภาษา คุณต้องติดตั้งไรบารี่นี้ก่อน ใช้คำสั่งนี้ในเทอมินอลของท่าน
