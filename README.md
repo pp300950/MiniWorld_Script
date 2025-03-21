@@ -11,11 +11,10 @@ Python (for additional tools)
 ##How to Run
 Navigate to the project directory.
 
-###Run the game with:```
-lua main.lua
-```
-If using Python tools, execute the required script as:```
-python script_name.py```
+###Run the game with:
+```lua main.lua```
+If using Python tools, execute the required script as:
+```python script_name.py```
 
 ##Contribution
 Feel free to contribute by adding new Lua modules or improving Python scripts. Ensure your code follows best practices.
