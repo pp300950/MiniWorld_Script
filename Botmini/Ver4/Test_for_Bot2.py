@@ -1,20 +1,18 @@
 import random
 
-# ฟังก์ชันกระตุ้น (Linear Activation)
 def linear(x):
     return x  
 
-# ค่าพารามิเตอร์ที่ฝึกแล้ว
+#ค่าพารามิเตอร์ที่ฝึกแล้ว
 w1=     0.4972227467934
 w2=     0.49850404146627
 b=      0.0030442658154439
 
-# ฟังก์ชันทำนายผลลัพธ์
+#ฟังก์ชันทำนายผลลัพธ์
 def predict(x1, x2):
     weighted_sum = x1 * w1 + x2 * w2 + b
     return linear(weighted_sum)
 
-# ฟังก์ชันสำหรับการสร้างโจทย์การบวกเลขแบบสุ่ม
 def generate_question(difficulty_level=1):
     if difficulty_level == 1:
         num1 = random.randint(0, 10)
@@ -25,33 +23,46 @@ def generate_question(difficulty_level=1):
     elif difficulty_level == 3:
         num1 = random.randint(100, 1000)
         num2 = random.randint(100, 1000)
+    elif difficulty_level == 4:
+        num1 = random.randint(1000, 10000)
+        num2 = random.randint(1000, 10000)
+    elif difficulty_level == 5:
+        num1 = random.randint(10000, 100000)
+        num2 = random.randint(10000, 100000)
+    elif difficulty_level == 6:
+        num1 = random.randint(1000000, 10000000)
+        num2 = random.randint(1000000, 10000000)
+    elif difficulty_level == 7:
+        num1 = random.randint(1000000000, 10000000000)
+        num2 = random.randint(1000000000, 10000000000)
+    elif difficulty_level == 8:
+        num1 = random.randint(100000000000000, 1000000000000000)
+        num2 = random.randint(100000000000000, 1000000000000000)
     else:
-        num1 = random.randint(1, 1000000)
-        num2 = random.randint(1, 1000000)
+        num1 = random.randint(1, 100000000000000000000)
+        num2 = random.randint(1, 100000000000000000000)
     return num1, num2
-# ฟังก์ชันทดสอบความสามารถของบอท
+
 def test_bot_capability():
     correct_answers = 0
     wrong_answers = 0
-    total_questions = 1000  # จำนวนรอบที่ต้องการให้ทำ
+    total_questions = 1000  #จำนวนรอบที่ต้องการให้ทำ
     max_value = 50
-    difficulty_level = 1  # เริ่มต้นระดับความยาก
+    difficulty_level = 1  #เริ่มต้นระดับความยาก
 
     print("\nเริ่มการทดสอบความสามารถของบอท!\n")
     print("=" * 40)
 
     for i in range(1, total_questions + 1):
-        # สุ่มตัวเลขสองตัวโดยเพิ่มระดับความยาก
         num1 = random.randint(1, max_value * difficulty_level)
         num2 = random.randint(1, max_value * difficulty_level)
 
         correct_answer = num1 + num2
 
-        # การปรับสเกลตัวเลขเป็นค่าระหว่าง 0 ถึง 1 เพื่อการทำนาย
+        #การปรับสเกลตัวเลขเป็นค่าระหว่าง 0 ถึง 1 เพื่อการทำนาย
         x1, x2 = num1 / (max_value * difficulty_level), num2 / (max_value * difficulty_level)
         predicted_answer = predict(x1, x2) * (2 * max_value * difficulty_level)
 
-        # ตรวจสอบว่าคำตอบที่ทำนายถูกต้องหรือไม่
         if round(predicted_answer) == correct_answer:
             correct_answers += 1
             result = "[ถูกต้อง]"
@@ -67,13 +78,13 @@ def test_bot_capability():
             print("\n[การทดสอบสิ้นสุด: บอทตอบผิดครบ 3 ครั้ง]\n")
             break
 
-        # เพิ่มระดับความยากทุกๆ 5 ข้อ โดยทวีคูณ
+        #เพิ่มระดับความยากทุกๆ 5 ข้อ โดยทวีคูณ
         if i % 5 == 0:
-            difficulty_level *= 2  # ทวีคูณความยาก
+            difficulty_level *= 2  #ทวีคูณความยาก
             print("\nเพิ่มระดับความยากแบบทวีคูณ!\n")
             print("-" * 40)
 
-    # คำนวณค่าความแม่นยำโดยใช้ total_questions เป็นฐาน
+    #คำนวณค่าความแม่นยำโดยใช้ total_questions เป็นฐาน
     accuracy = (correct_answers / total_questions) * 100
     print(f"\nผลลัพธ์: ตอบถูก {correct_answers} ข้อ จากทั้งหมด {total_questions} ข้อ")
     print(f"ความแม่นยำ: {accuracy:.2f}%")
@@ -90,19 +101,18 @@ def test_bot_accuracy():
     print("\nเริ่มการทดสอบความแม่นยำของบอท!\n")
     print("=" * 40)
 
-    while wrong_answers < 50 and correct_answers < 1000:  # เพิ่มเงื่อนไขว่าถ้าตอบถูกครบ 1000 ข้อ ให้หยุด
+    while wrong_answers < 50 and correct_answers < 1000:  #ถูกครบ1000 ข้อให้หยุด
         total_questions += 1
         
-        # เพิ่มเลข 9 ลงไปในหลักของการสุ่มทุกๆ 5 ข้อ
+        #เพิ่มเลข 9 ลงไปในหลักของการสุ่มทุก 5 ข้อ
         if total_questions % 5 == 0:
-            num1 = random.randint(1, 99) * 10000 * 99999999  # เพิ่ม 999 ที่หลักท้าย
-            num2 = random.randint(1, 99) * 10000 * 99999999  # เพิ่ม 999 ที่หลักท้าย
+            num1 = random.randint(1, 99) * 10000 * 99999999  
+            num2 = random.randint(1, 99) * 10000 * 99999999  
         else:
             num1 = random.randint(1, 99)
             num2 = random.randint(1, 99)
         
         correct_answer = num1 + num2
-
         x1, x2 = num1 / max_value, num2 / max_value
         predicted_answer = predict(x1, x2) * (2 * max_value)
 
@@ -115,15 +125,12 @@ def test_bot_accuracy():
 
         print(f"โจทย์: {num1} + {num2} = {round(predicted_answer)} --> {result}")
         
-        # แสดงความแม่นยำในแต่ละรอบ
         accuracy = (correct_answers / 1000) * 100
-
         print(f"ความแม่นยำหลังจากตอบ {total_questions} ข้อ: {accuracy:.2f}%")
 
-    # สรุปผลลัพธ์หลังจากทดสอบเสร็จ
+    #สรุปผลทดสอบ
     summarize_results("ทดสอบความแม่นยำ", total_questions, correct_answers, wrong_answers,accuracy)
 
-# ฟังก์ชันสรุปผลลัพธ์
 def summarize_results(mode, total_questions, correct_answers, wrong_answers,accuracy):
     print(f"\nผลการทดสอบโมเดล ({mode}):")
     print("+----------------------+------------+")
@@ -136,7 +143,6 @@ def summarize_results(mode, total_questions, correct_answers, wrong_answers,accu
     print(f"| ความแม่นยำ            | {accuracy:.2f}%     |")
     print("+----------------------+------------+")
 
-# เริ่มการทดสอบ
-print("เริ่มการทดสอบ\n")
+print("เริ่มการทดสอบเเล้วหน้าาาา\n")
 test_bot_capability()
 test_bot_accuracy()
