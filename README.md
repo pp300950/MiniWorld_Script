@@ -1,4 +1,4 @@
-# Miniverse Game Project
+# MiniWorld Game Project
 
 ## Overview
 Miniverse is a Lua-based game project with Python scripts serving as supplementary tools. This project is designed to be lightweight, modular, and easy to expand.
