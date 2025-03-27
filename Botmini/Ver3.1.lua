@@ -1,6 +1,6 @@
 math.randomseed(os.time())
 
--- 🧠 Neural Network Model (Simple DQN)
+--Simple DQN
 function createDQN(input_size, hidden_size, output_size)
     local model = {
         weights1 = {},
@@ -9,7 +9,7 @@ function createDQN(input_size, hidden_size, output_size)
         biases2 = {}
     }
 
-    -- 🎯 สุ่มค่าเริ่มต้นของน้ำหนักและ bias
+    --สุ่มค่าเริ่มต้นของน้ำหนักและ bias
     for i = 1, input_size do
         model.weights1[i] = {}
         for j = 1, hidden_size do
@@ -30,7 +30,7 @@ function createDQN(input_size, hidden_size, output_size)
     return model
 end
 
--- 🏼‍♂️ Forward Propagation (ReLU Activation)
+--Forward Propagation
 function forward(model, input)
     local hidden = {}
     for j = 1, #model.weights1[1] do
@@ -38,7 +38,7 @@ function forward(model, input)
         for i = 1, #input do
             hidden[j] = hidden[j] + input[i] * model.weights1[i][j]
         end
-        hidden[j] = math.max(0, hidden[j]) -- ReLU Activation
+        hidden[j] = math.max(0, hidden[j]) --ReLU Activation
     end
 
     local output = {}
@@ -52,7 +52,7 @@ function forward(model, input)
     return output, hidden
 end
 
--- 🛠 Backpropagation & Gradient Descent
+--Backpropagation & Gradient Descent
 function trainDQN(model, input, target, lr)
     local output, hidden = forward(model, input)
     local error_value = target - output[1]
@@ -63,7 +63,7 @@ function trainDQN(model, input, target, lr)
     end
     model.biases2[1] = model.biases2[1] + lr * error_value
 
-    -- ปรับค่าชั้นที่ 1
+    --ปรับค่าชั้นที่ 1
     for i = 1, #input do
         for j = 1, #model.weights1[i] do
             if hidden[j] > 0 then
@@ -73,7 +73,7 @@ function trainDQN(model, input, target, lr)
     end
 end
 
--- 🎮 Deep Q-Network (DQN) Agent
+--Deep Q-Network (DQN) Agent
 DQNAgent = {}
 DQNAgent.__index = DQNAgent
 
@@ -123,7 +123,7 @@ function DQNAgent:train()
     self.epsilon = math.max(self.epsilon_min, self.epsilon * self.epsilon_decay)
 end
 
--- 🚀 ฝึกโมเดล DQN โดยใช้สูตร Dew = Dold + ΔD
+--ฝึกโมเดล DQN โดยใช้สูตร Dew = Dold + ΔD
 function train_dqn(agent, epochs)
     local Dold = 0
     for i = 1, epochs do
@@ -136,11 +136,11 @@ function train_dqn(agent, epochs)
         agent:store_experience(state, action, reward, state)
         agent:train()
 
-        Dold = Dew  -- อัปเดตค่า Dold
+        Dold = Dew  --อัปเดตค่า Dold
     end
 end
 
--- 🧪 ทดสอบโมเดล
+--ทดสอบโมเดล
 function test_dqn(agent, test_cases)
     for _, test in ipairs(test_cases) do
         local Dold, deltaD = test[1], test[2]
@@ -152,7 +152,7 @@ function test_dqn(agent, test_cases)
     end
 end
 
--- 🔥 เริ่มต้นฝึก Agent
+--เริ่มต้นฝึก Agent
 local agent = DQNAgent:create(2)
 train_dqn(agent, 5000)
 
