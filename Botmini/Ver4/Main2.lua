@@ -28,7 +28,7 @@ end
 --กำหนดค่าน้ำหนักเริ่มต้น
 local w1, w2, b = random_weight(), random_weight(), random_weight()
 local learning_rate = 0.001  --ลดอัตราการเรียนรู้
-local epochs = 38
+local epochs = 10
 
 --วนลูปฝึกโมเดล
 for epoch = 1, epochs do

@@ -4,9 +4,9 @@ def linear(x):
     return x  
 
 #ค่าพารามิเตอร์ที่ฝึกแล้ว
-w1=     0.4972227467934
-w2=     0.49850404146627
-b=      0.0030442658154439
+w1=     0.3896200904417
+w2=     0.43518750954113
+b=      0.1238546632071
 
 #ฟังก์ชันทำนายผลลัพธ์
 def predict(x1, x2):
@@ -101,7 +101,7 @@ def test_bot_accuracy():
     print("\nเริ่มการทดสอบความแม่นยำของบอท!\n")
     print("=" * 40)
 
-    while wrong_answers < 50 and correct_answers < 1000:  #ถูกครบ1000 ข้อให้หยุด
+    while wrong_answers < 35 and correct_answers < 1000:  #ถูกครบ1000 ข้อให้หยุด
         total_questions += 1
         
         #เพิ่มเลข 9 ลงไปในหลักของการสุ่มทุก 5 ข้อ
@@ -140,7 +140,7 @@ def summarize_results(mode, total_questions, correct_answers, wrong_answers,accu
     print(f"| คำตอบที่ถูกต้อง          | {correct_answers:<10} |")
     print(f"| คำตอบที่ผิด             | {wrong_answers:<10} |")
     print("+----------------------+------------+")
-    print(f"| ความแม่นยำ            | {accuracy:.2f}%     |")
+    print(f"| ความแม่นยำ            | {accuracy:.2f}%      |")
     print("+----------------------+------------+")
 
 print("เริ่มการทดสอบเเล้วหน้าาาา\n")
