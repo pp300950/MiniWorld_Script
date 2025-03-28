@@ -28,7 +28,7 @@ end
 --กำหนดค่าน้ำหนักเริ่มต้น
 local w1, w2, b = random_weight(), random_weight(), random_weight()
 local learning_rate = 0.001  --ลดอัตราการเรียนรู้
-local epochs = 10
+local epochs = 1000
 
 --วนลูปฝึกโมเดล
 for epoch = 1, epochs do
@@ -69,12 +69,12 @@ for epoch = 1, epochs do
 end
 
 print("\nค่าพารามิเตอร์ที่ฝึกแล้ว:")
-print("w1=", w1)
-print("w2=", w2)
-print("b=", b)
+print("w1:", string.format("%.10f", w1))
+print("w2:", string.format("%.10f", w2))
+print("b:", string.format("%.15f", b))
 
 print("\nผลลัพธ์ของโมเดลที่ฝึกแล้ว:")
-local test_cases = {{1, 1}, {6, 4}, {10, 11}, {1654564556650, 200}}
+local test_cases = {{1, 1}, {6, 4}, {10, 11}, {16550, 200}}
 for _, case in ipairs(test_cases) do
     local x1, x2 = case[1] / max_value, case[2] / max_value  --Normalize อินพุต
     local weighted_sum = x1 * w1 + x2 * w2 + b 

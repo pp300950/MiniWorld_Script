@@ -144,6 +144,7 @@ VarLib2:setGlobalVarByName(3, "w2", w2)
 VarLib2:setGlobalVarByName(3, "b", b)
 VarLib2:setGlobalVarByName(3, "epochs", epochs)
 VarLib2:setGlobalVarByName(3, "learning_rate", learning_rate)
+VarLib2:setGlobalVarByName(3, "total_error", total_error)
 print("เก็บค่าละ")
 
 --ค่าที่ฝึกแล้ว
@@ -154,10 +155,22 @@ print("b=", b)
 
 --ผลการทดสอบ
 print("\nผลลัพธ์ของโมเดลที่ฝึกแล้ว:")
-local test_cases = {{1, 1}, {6, 4}, {10, 11}, {1654564556650, 200}}
+local test_cases = {{1, 1}, {6, 4}, {19, 59}, {1650, 200}, {9951, 12559}}
+
+local results = {}  -- สร้างตารางเก็บสตริงของแต่ละบรรทัด
+
 for _, case in ipairs(test_cases) do
     local x1, x2 = case[1] / max_value, case[2] / max_value
     local weighted_sum = x1 * w1 + x2 * w2 + b 
     local prediction = linear(weighted_sum) * (2 * max_value) 
-    print("อินพุต:", case[1], case[2], "ผลลัพธ์ที่ทำนาย:", math.floor(prediction + 0.5))
+    local rounded_prediction = math.floor(prediction + 0.5)
+
+    -- ต่อสตริงและเพิ่มลงในตาราง
+    table.insert(results, "input: " .. case[1] .. " + " .. case[2] .. " = " .. rounded_prediction .. " | "..case[1]+case[2])
 end
+
+-- รวมผลลัพธ์ทั้งหมดเป็นสตริงเดียว โดยใช้ "\n" เป็นตัวคั่นบรรทัด
+local final_result = table.concat(results, "\n")
+
+print(final_result)  -- แสดงผล
+VarLib2:setGlobalVarByName(4, "final_result", final_result)
