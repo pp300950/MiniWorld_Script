@@ -16,7 +16,7 @@ end
 --ข้อมูลสำหรับการฝึก 
 local inputs = {}
 local outputs = {}
-local max_value = 50  --ค่าสูงสุดของข้อมูล
+local max_value = 100  --ค่าสูงสุดของข้อมูล
 
 for i = 0, max_value do
     for j = 0, max_value do
@@ -28,7 +28,7 @@ end
 --กำหนดค่าน้ำหนักเริ่มต้น
 local w1, w2, b = random_weight(), random_weight(), random_weight()
 local learning_rate = 0.001  --ลดอัตราการเรียนรู้
-local epochs = 1000
+local epochs = 10000
 
 --วนลูปฝึกโมเดล
 for epoch = 1, epochs do
