@@ -1,5 +1,5 @@
+os.execute("chcp 65001 > nul")  
 
-os.execute("chcp 65001 > nul")  -- เปลี่ยน Windows CMD เป็น UTF-8
 
 
 -- ฐานข้อมูลเนื้อเพลง
@@ -107,11 +107,12 @@ local lyrics_db = {
 
 }
 
-
-
-
 --คำนวณระยะห่างเลเวนสไตน์
 function levenshtein(s1, s2)
+    if type(s1) ~= "string" or type(s2) ~= "string" then
+        return math.huge
+    end
+
     local len1, len2 = #s1, #s2
     local matrix = {}
 
@@ -128,9 +129,9 @@ function levenshtein(s1, s2)
         for j = 1, len2 do
             local cost = (s1:sub(i, i) == s2:sub(j, j)) and 0 or 1
             matrix[i][j] = math.min(
-                matrix[i-1][j] + 1, --ลบ
-                matrix[i][j-1] + 1, --เพิ่ม
-                matrix[i-1][j-1] + cost --แทนที่
+                matrix[i-1][j] + 1,
+                matrix[i][j-1] + 1,
+                matrix[i-1][j-1] + cost
             )
         end
     end
@@ -138,78 +139,72 @@ function levenshtein(s1, s2)
     return matrix[len1][len2]
 end
 
---เปรียบเทียบคำระหว่างคำในอินพุตและคำในเพลง
-function word_similarity(input_word, song_word)
-    local lev_score = levenshtein(input_word, song_word)
-    local max_len = math.max(#input_word, #song_word)
-    local similarity = 1 - (lev_score / max_len)
-    return similarity
+--เปรียบเทียบข้อความที่ยาวขึ้น
+function sentence_similarity(input_sentence, song_sentence)
+    if type(input_sentence) ~= "string" or type(song_sentence) ~= "string" then
+        return 0
+    end
+
+    local lev_score = levenshtein(input_sentence, song_sentence)
+    local max_len = math.max(#input_sentence, #song_sentence)
+
+    if max_len == 0 then
+        return 0
+    end
+
+    return 1 - (lev_score / max_len)
 end
 
---ค้นหาคำที่ใกล้เคียงที่สุดในเนื้อเพลง
+--สร้าง N-grams
+function create_ngrams(text, n)
+    local words = {}
+    for word in text:gmatch("%S+") do
+        table.insert(words, word)
+    end
+
+    local ngrams = {}
+    for i = 1, #words - (n - 1) do
+        local ngram = table.concat({table.unpack(words, i, i + (n - 1))}, " ")
+        table.insert(ngrams, ngram)
+    end
+    return ngrams
+end
+
+--ค้นหาประโยคที่ตรงที่สุดในเนื้อเพลง
 function find_best_match(input_lyrics)
     local best_match = nil
     local best_score = 0
-    local best_overall_score = 0
     local best_song_name = ""
-    local threshold = 0.4  --เกณฑ์ความคล้ายคลึง
+
+    local input_ngrams = create_ngrams(input_lyrics, 3) --ใช้N-gram3คำ
 
     for _, song in ipairs(lyrics_db) do
-        -- แบ่งคำจากเนื้อเพลง
-        local song_words = {}
-        for word in song.lyrics:gmatch("[^|]+") do  --แยกคำตาม |
-            table.insert(song_words, word)
-        end
+        local song_ngrams = create_ngrams(song.lyrics, 3)
 
-        --แบ่งคำจากอินพุต
-        local input_words = {}
-        for word in input_lyrics:gmatch("[^%s|]+") do  --แบ่งคำโดยเว้นวรรคและ |
-            table.insert(input_words, word)
-        end
-
-        --ตรวจสอบคำที่ใกล้เคียงกัน
-        local total_score = 0
-        local match_count = 0
-        for _, input_word in ipairs(input_words) do
-            for _, song_word in ipairs(song_words) do
-                local similarity_score = word_similarity(input_word, song_word)
-                if similarity_score > threshold then  --หากความคล้ายคลึงมากกว่า60%
-                    total_score = total_score + similarity_score
-                    match_count = match_count + 1
+        for _, input_ngram in ipairs(input_ngrams) do
+            for _, song_ngram in ipairs(song_ngrams) do
+                local similarity_score = sentence_similarity(input_ngram, song_ngram)
+        
+                print("เปรียบเทียบ:", input_ngram, "<->", song_ngram, "=>", similarity_score)
+                if similarity_score > best_score then
+                    best_score = similarity_score
+                    best_match = song.title
+                    best_song_name = song.title
                 end
             end
         end
-
-        if match_count > 0 then
-            --คำนวณคะแนนรวมจากคำที่ตรงกัน
-            local avg_score = total_score / match_count
-            if avg_score > best_score then
-                best_score = avg_score
-                best_match = song.title
-            end
-        end
-
-        --คำนวนคะแนนรวมจากทุกเพลง
-        local overall_score = total_score / #input_words
-        if overall_score > best_overall_score then
-            best_overall_score = overall_score
-            best_song_name = song.title
-        end
-    end
-
-    --ถ้าไม่พบเพลงที่ตรงกับเกณฑ์ threshold ให้เลือเพลงที่ใกล้เคียงที่สุดแทน
-    if best_match == nil then
-        return best_song_name, best_overall_score
+        
     end
 
     return best_match, best_score
 end
 
-local user_input = "จำ อะไร ได้ บ้าง ไหม เกี่ยว กับ ชั้น คน เก่า เพลง เดิมๆ ที่ เคย เป็น ของ เรา"
+--ทดสอบอินพุต
+local user_input = "นอก จาก ชื่อ ฉัน มี สิ่ง อื่น ไหม"
 local song_name, similarity_score = find_best_match(user_input)
 
-if song_name then
-    print("Match: "..song_name .." (score "..similarity_score ..")")
+if song_name and similarity_score > 0.5 then
+    print("Match: " .. song_name .. " (score " .. similarity_score .. ")")
 else
     print("Don't find it.")
 end
