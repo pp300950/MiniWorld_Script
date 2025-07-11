@@ -385,69 +385,75 @@ local dataset = {
     "6899",
     "7889"
 }
-
--- ฟังก์ชันสุ่มชุดข้อมูลจาก dataset
-local function get_random_data()
-    local index = math.random(1, #dataset) -- สุ่ม index
-    return dataset[index]
+-- สร้าง permutation ของ table
+local function permutations(arr, n, result)
+    result = result or {}
+    n = n or #arr
+    if n == 1 then
+        table.insert(result, { table.unpack(arr) })
+    else
+        for i = 1, n do
+            arr[n], arr[i] = arr[i], arr[n]
+            permutations(arr, n - 1, result)
+            arr[n], arr[i] = arr[i], arr[n]
+        end
+    end
+    return result
 end
 
--- ฟังก์ชันแก้สมการให้ผลลัพธ์ = 24
+--ฟังก์ชันแก้สมการ
 local function solve_for_24(numbers)
     local ops = { "+", "-", "*", "/" }
-
-    -- helper ฟังก์ชัน eval
-    local function eval(a, op, b)
-        if op == "+" then return a + b
-        elseif op == "-" then return a - b
-        elseif op == "*" then return a * b
-        elseif op == "/" and b ~= 0 then return a / b
-        end
-        return nil
-    end
-
-    -- แปลงตัวเลขเป็น table
     local digits = {}
     for i = 1, #numbers do
         digits[i] = tonumber(numbers:sub(i, i))
     end
 
-    -- ลองทุก permutation และ combination ของ operator
-    for i1 = 1, #ops do
-        for i2 = 1, #ops do
-            for i3 = 1, #ops do
-                local exprs = {
-                    "(("..digits[1]..ops[i1]..digits[2]..")"..ops[i2]..digits[3]..")"..ops[i3]..digits[4],
-                    "("..digits[1]..ops[i1].."("..digits[2]..ops[i2]..digits[3].."))"..ops[i3]..digits[4],
-                    digits[1]..ops[i1].."("..digits[2]..ops[i2].."("..digits[3]..ops[i3]..digits[4].."))",
-                    digits[1]..ops[i1].."(".."("..digits[2]..ops[i2]..digits[3]..")"..ops[i3]..digits[4]..")"
-                }
+    --สร้าง permutation ของตัวเลข
+    local all_num_perms = permutations(digits)
 
-                for _, expr in ipairs(exprs) do
-                    local ok, result = pcall(function() return load("return "..expr)() end)
-                    if ok and math.abs(result - 24) < 0.0001 then
-                        return expr.."=24" -- คืนสมการที่แก้ได้
+    --ลองทุก permutation ของตัวเลข
+    for _, nums in ipairs(all_num_perms) do
+        -- ลองทุก combination ของ operator
+        for _, op1 in ipairs(ops) do
+            for _, op2 in ipairs(ops) do
+                for _, op3 in ipairs(ops) do
+                    local exprs = {
+                        "(("..nums[1]..op1..nums[2]..")"..op2..nums[3]..")"..op3..nums[4],
+                        "("..nums[1]..op1.."("..nums[2]..op2..nums[3].."))"..op3..nums[4],
+                        nums[1]..op1.."("..nums[2]..op2.."("..nums[3]..op3..nums[4].."))",
+                        nums[1]..op1.."(".."("..nums[2]..op2..nums[3]..")"..op3..nums[4]..")",
+                        "("..nums[1]..op1..nums[2]..")"..op2.."("..nums[3]..op3..nums[4]..")"
+                    }
+
+                    for _, expr in ipairs(exprs) do
+                        local ok, result = pcall(function() return load("return "..expr)() end)
+                        if ok and math.abs(result - 24) < 0.0001 then
+                            return expr.."=24"
+                        end
                     end
                 end
             end
         end
     end
 
-    return "No solution found" -- ถ้าแก้ไม่ได้
+    return "No solution found"
 end
 
--- ฟังก์ชันส่งค่าไปเก็บที่ตัวแปร G2 และ G3
+local function get_random_data()
+    local index = math.random(1, #dataset) -- สุ่ม index
+    return dataset[index]
+end
+
 local function send_to_vars(original, solved)
     VarLib2:setGlobalVarByName(4, "G2", original)
     VarLib2:setGlobalVarByName(4, "G3", solved)
 end
 
--- กระบวนการหลัก
 local function process()
     local selected_value = get_random_data()
     local solved_expr = solve_for_24(selected_value)
     send_to_vars(selected_value, solved_expr)
 end
 
--- เรียกกระบวนการ
 process()
