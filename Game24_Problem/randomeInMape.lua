@@ -385,12 +385,21 @@ local dataset = {
     "6899",
     "7889"
 }
--- สร้าง permutation ของ table
+
+local function copy_table(orig)
+    local copy = {}
+    for i = 1, #orig do
+        copy[i] = orig[i]
+    end
+    return copy
+end
+
 local function permutations(arr, n, result)
     result = result or {}
     n = n or #arr
     if n == 1 then
-        table.insert(result, { table.unpack(arr) })
+        local perm = copy_table(arr) -- คัดลอกแทน unpack
+        table.insert(result, perm)
     else
         for i = 1, n do
             arr[n], arr[i] = arr[i], arr[n]
@@ -401,20 +410,17 @@ local function permutations(arr, n, result)
     return result
 end
 
---ฟังก์ชันแก้สมการ
+-- ฟังชันแก้สมการ
 local function solve_for_24(numbers)
     local ops = { "+", "-", "*", "/" }
     local digits = {}
     for i = 1, #numbers do
         digits[i] = tonumber(numbers:sub(i, i))
     end
-
-    --สร้าง permutation ของตัวเลข
     local all_num_perms = permutations(digits)
 
-    --ลองทุก permutation ของตัวเลข
     for _, nums in ipairs(all_num_perms) do
-        -- ลองทุก combination ของ operator
+
         for _, op1 in ipairs(ops) do
             for _, op2 in ipairs(ops) do
                 for _, op3 in ipairs(ops) do
@@ -437,9 +443,8 @@ local function solve_for_24(numbers)
         end
     end
 
-    return "No solution found"
+    return "ไม่มีคำตอบ มั้ง"
 end
-
 local function get_random_data()
     local index = math.random(1, #dataset) -- สุ่ม index
     return dataset[index]
@@ -455,5 +460,4 @@ local function process()
     local solved_expr = solve_for_24(selected_value)
     send_to_vars(selected_value, solved_expr)
 end
-
 process()
