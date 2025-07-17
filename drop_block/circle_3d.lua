@@ -38,4 +38,4 @@ end
 ScriptSupportEvent:registerEvent([[Map.Load]], CreateInstantSphere)
 
 -- หรือเรียกโดยตรงเพื่อทดสอบ (สำหรับใช้ในคอนโซลของ Editor)
--- CreateInstantSphere()
+CreateInstantSphere()
